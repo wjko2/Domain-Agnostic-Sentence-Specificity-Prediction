@@ -1,0 +1,29 @@
++Group = "GRAD"
++Project ="AI_ROBOTICS"
++ProjectDescription ="Sentence Specificity"
++GPUJob=true
+universe = vanilla
+
+# Don't use machine <= 10
+Requirements = (Target.Machine=="eldar-25.cs.utexas.edu")
+getenv = True
+
+
+Initialdir =  /scratch/cluster/wjko/InferSent
+
+executable = /scratch/cluster/wjko/anaconda3/bin/python
+
+arguments =  /scratch/cluster/wjko/InferSent/train2gkl.py  --d 0.999 --optimizer adam,lr=0.0001 --enc_lstm_dim 100 --fc_dim 100 --gnoise 0.1 --dprob 0.15 --iprob 0.15  --cprob 0.15 --sf 1 --sptrain 0 --esize 4342 --dom 1 --tv 200 --wf 1 --th 0.5  --nonlinear_fc 1 --dpout_fc 0.5 --gpu_id 0 --cth 0 --seed 508 --dpout_model 0.5 --lrshrink 1 --loss 0  --test_data movie --wed 300  --gnoise2 0.2 --norm 1 --se 4  --n_epochs 5 --uss 5000 --sss  50  --c 0 --uss2 5000 --rmu 0 --ne0 100  --md 0 --c2 0 --me 11
+
+
+
+output     =  /scratch/cluster/wjko/InferSent/1.out
+error      = /scratch/cluster/wjko/InferSent/1.err
+log        =  /scratch/cluster/wjko/InferSent/1.log
+
+
+Queue
+
+
+
+
