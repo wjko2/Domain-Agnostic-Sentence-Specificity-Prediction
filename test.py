@@ -1,9 +1,3 @@
-# Copyright (c) 2017-present, Facebook, Inc.*1
-# All rights reserved.
-#
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
-#
 import pickle
 import os
 import sys
@@ -15,13 +9,9 @@ import numpy as np
 import scipy.stats
 from generatefeatures import ModelNewText
 from features import Space
-from allennlp.commands.elmo import ElmoEmbedder
-#ee = ElmoEmbedder()
-#embbb = ee.embed_sentence("A dog is ddeeeeee".split())
 
 import utils
 import torch
-#print(torch.from_numpy(np.asarray(embbb)))
 from torch.autograd import Variable
 import torch.nn as nn
 
@@ -322,10 +312,7 @@ def update_ema_variables(model, ema_model, alpha, global_step):
 
 
 def evaluate(epoch, eval_type='valid', final_eval=False):
-    if eval_type=='valid':
-        kko=open('ravo10.txt','w')
-    else:
-        kko=open('predictions.txt','w')
+    kko=open('predictions.txt','w')
         
 
     pdtb_net.eval()
@@ -336,22 +323,11 @@ def evaluate(epoch, eval_type='valid', final_eval=False):
     correctfn = 0.
     global val_acc_best, lr, stop_training, adam_stop
 
-    if eval_type == 'valid':
-        print('\nVALIDATION : Epoch {0}'.format(epoch))
 
     s1 = valid['s1'] if eval_type == 'valid' else test['s1']
  #   s2 = valid['s2'] if eval_type == 'valid' else test['s2']
     target = valid['label'] if eval_type == 'valid' else test['label']
     targetv = valid['labelv'] if eval_type == 'valid' else test['labelv']
-    
-    es=0
-    esv=0
-    esw=0
-    esx=0
-    esy=0
-    ec=0
-    opssh=0
-    isqqq=np.zeros((10))
     for i in range(0, len(s1), params.batch_size):
     
         # prepare batch
@@ -390,7 +366,7 @@ def evaluate(epoch, eval_type='valid', final_eval=False):
 Train model on Natural Language Inference task
 """
 epoch = 1
-pdtb_net2 = torch.load('/scratch/cluster/wjko/InferSent/savedir/3osmodel.pickle')
+pdtb_net2 = torch.load('3os'+params.outputmodelname)
 
 print('\nTEST : Epoch {0}'.format(epoch))
 evaluate(0, 'test', True)

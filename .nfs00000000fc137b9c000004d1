@@ -1,3 +1,9 @@
+# Copyright (c) 2017-present, Facebook, Inc.*1
+# All rights reserved.
+#
+# This source code is licensed under the license found in the
+# LICENSE file in the root directory of this source tree.
+#
 import pickle
 import os
 import sys
@@ -9,8 +15,13 @@ import numpy as np
 import scipy.stats
 from generatefeatures import ModelNewText
 from features import Space
+from allennlp.commands.elmo import ElmoEmbedder
+#ee = ElmoEmbedder()
+#embbb = ee.embed_sentence("A dog is ddeeeeee".split())
+
 import utils
 import torch
+#print(torch.from_numpy(np.asarray(embbb)))
 from torch.autograd import Variable
 import torch.nn as nn
 
@@ -18,8 +29,6 @@ from data2 import get_nli, get_batch, build_vocab,get_pdtb
 from mutils import get_optimizer
 from models import NLINet,PDTBNet
 from torch.nn import functional as F
-
-
 global_step=0
 
 parser = argparse.ArgumentParser(description='NLI training')
@@ -47,7 +56,7 @@ parser.add_argument("--esize", type=int, default=4342)
 parser.add_argument("--dom", type=int, default=1)
 parser.add_argument("--norm", type=int, default=1)
 
-parser.add_argument("--batch_size", type=int, default=32)
+parser.add_argument("--batch_size", type=int, default=1)
 parser.add_argument("--se", type=int, default=4)
 parser.add_argument("--me", type=int, default=31)
 
@@ -93,8 +102,6 @@ parser.add_argument("--eeps", type=float, default=0.1, help="seed")
 
 
 params, _ = parser.parse_known_args()
-if  params.test_data=='pdtb':
-    params.esize=2784
 if params.wed==300:
     GLOVE_PATH = "dataset/GloVe/glove.840B.300d.txt"
 
@@ -160,6 +167,10 @@ def getFeatures(fin):
     return y,xs
 
 train,valid, test,unlab ,trainu= get_pdtb(params.nlipath,params.dom,params.test_data,params.tv)
+#train['label']=train['label']*0.8+0.1
+#print(train['label'])
+
+#print (train[s1].shape)
 _,xsl = getFeatures(os.path.join(params.nlipath,'data.txt'))
 
 if params.test_data=="twitter":
@@ -192,6 +203,7 @@ if params.norm==1:
         xslu[i]=(xslu[i]-mmm)/vvv
 xstt=xst[params.tv:]
 xst=xst[:params.tv]
+
 word_vec = build_vocab(train['s1']+ #+ train['s2'] +
                       # valid['s1'] + valid['s2'] +
                        #test['s1'] + test['s2']
@@ -202,6 +214,8 @@ if params.sptrain==1:
     train['s1']=train['s1']+trainu['s1']
     train['label']=np.concatenate((train['label'],trainu['label']))
     xsl=np.concatenate((xsl,xslu))
+#for split in ['s1', 's2']:
+
 for split in ['s1']:
     for data_type in ['train', 'valid', 'test', 'unlab', 'trainu']:
         eval(data_type)[split] = np.array([['<s>'] +
@@ -242,6 +256,7 @@ assert params.encoder_type in encoder_types, "encoder_type must be in " + \
 
 pdtb_net = PDTBNet(config_nli_model)
 pdtb_net2 = PDTBNet(config_nli_model)
+print(pdtb_net)
 
 # loss
 weight = torch.FloatTensor(params.n_classes).fill_(1)
@@ -271,6 +286,7 @@ adam_stop = False
 stop_training = False
 lr = optim_params['lr'] if 'sgd' in params.optimizer else None
 def get_batch_aug(batch, word_vec):
+    # sent in batch in decreasing order of lengths (bsize, max_len, word_dim)
     lengths = np.array([len(x) for x in batch])
     max_len = np.max(lengths)+3
     embed = np.zeros((max_len, len(batch), params.wed))
@@ -286,7 +302,11 @@ def get_batch_aug(batch, word_vec):
                     embed[j, i, :] = word_vec[batch[i][j+os]]+ np.random.normal(0, params.gnoise, params.word_emb_dim )
             elif qq<params.dprob+params.iprob:
                 os=os-1
+                #embed[j, i, :] = np.random.uniform(-1,1,params.word_emb_dim)
+#                embed[j, i, :] = word_vec[random.choice(list(word_vec.keys()))]+ np.random.normal(0, params.gnoise, params.word_emb_dim )
             elif qq<params.dprob+params.iprob+params.sprob:
+#                embed[j, i, :] = word_vec[random.choice(list(word_vec.keys()))]+ np.random.normal(0, params.gnoise, params.word_emb_dim )
+                #embed[j, i, :] = np.random.uniform(-1,1,params.word_emb_dim)
                 wqwq=0
             else:
                 if j+os<len(batch[i]) and j<max_len:
@@ -295,181 +315,74 @@ def get_batch_aug(batch, word_vec):
     return torch.from_numpy(embed).float(), lengths
 
 def update_ema_variables(model, ema_model, alpha, global_step):
+    # Use the true average until the exponential average is more correct
     alpha = min(1 - 1 / (global_step + 1), alpha)
     for ema_param, param in zip(ema_model.parameters(), model.parameters()):
         ema_param.data.mul_(alpha).add_(1 - alpha, param.data)
 
-def trainepoch(epoch):
-    
-    print('\nTRAINING : Epoch ' + str(epoch))
-    pdtb_net.train()
-    pdtb_net2.train()
-    all_costs = []
-    logs = []
-    words_count = 0
 
-    last_time = time.time()
-    if params.uss==-1:
-        params.uss=len(unlab['s1'])
-    permutation = np.random.permutation(len(train['s1']))
-    permutationu = np.random.permutation(params.uss)
-    permutationu=permutationu%50
-    s1 = train['s1'][permutation]
-    s1f = xsl[permutation]
-    s_u = unlab['s1'][permutationu]
-    suf = xsu[permutationu]
-    target = train['label'][permutation]
-    print (target)
-
-    optimizer.param_groups[0]['lr'] = optimizer.param_groups[0]['lr'] * params.decay if epoch>1\
-        and 'sgd' in params.optimizer else optimizer.param_groups[0]['lr']
-    print('Learning rate : {0}'.format(optimizer.param_groups[0]['lr']))
-
-    for stidx in range(0, params.esize, params.batch_size):
-    
-        s1_batch, s1_len = get_batch_aug(s1[stidx:stidx + params.batch_size],
-                                     word_vec)
-        s1_batch2, s1_len2 = get_batch_aug(s1[stidx:stidx + params.batch_size],
-                                     word_vec)
+def evaluate(epoch, eval_type='valid', final_eval=False):
+    if eval_type=='valid':
+        kko=open('ravo10.txt','w')
+    else:
+        kko=open('predictions.txt','w')
         
-        s1_batchf=torch.from_numpy(s1f[stidx:stidx + params.batch_size]+ np.random.normal(0, params.gnoise2, 14 )).float()*params.sf
-        s1_batchf2=torch.from_numpy(s1f[stidx:stidx + params.batch_size]+ np.random.normal(0, params.gnoise2, 14 )).float()*params.sf
-        
-        su_batch, su_len = get_batch_aug(s_u[stidx:stidx + params.batch_size],
-                                     word_vec)
-        su_batchf=torch.from_numpy(suf[stidx:stidx + params.batch_size]+ np.random.normal(0, params.gnoise2, 14 )).float()*params.sf
-        su_batch2, su_len2 = get_batch_aug(s_u[stidx:stidx + params.batch_size],
-                                     word_vec)
-        su_batchf2=torch.from_numpy(suf[stidx:stidx + params.batch_size]+ np.random.normal(0, params.gnoise2, 14 )).float()*params.sf
+
+    pdtb_net.eval()
+    pdtb_net2.eval()
+    correcttp = 0.
+    correcttn = 0.
+    correctfp = 0.
+    correctfn = 0.
+    global val_acc_best, lr, stop_training, adam_stop
+
+    if eval_type == 'valid':
+        print('\nVALIDATION : Epoch {0}'.format(epoch))
+
+    s1 = valid['s1'] if eval_type == 'valid' else test['s1']
+ #   s2 = valid['s2'] if eval_type == 'valid' else test['s2']
+    target = valid['label'] if eval_type == 'valid' else test['label']
+    targetv = valid['labelv'] if eval_type == 'valid' else test['labelv']
+    
+    es=0
+    esv=0
+    esw=0
+    esx=0
+    esy=0
+    ec=0
+    opssh=0
+    isqqq=np.zeros((10))
+    for i in range(0, len(s1), params.batch_size):
+    
+        # prepare batch
+        s1_batch, s1_len = get_batch(s1[i:i + params.batch_size], word_vec,params.wed)
+        if eval_type == 'valid':
+            s1_batchf=torch.from_numpy(xst[i:i + params.batch_size]).float()*params.sf
+        else:
+            s1_batchf=torch.from_numpy(xstt[i:i + params.batch_size]).float()*params.sf
         if config_nli_model['use_cuda']:
             s1_batch= Variable(s1_batch).cuda()*params.wf
             s1_batchf= Variable(s1_batchf).cuda()
-            s1_batch2= Variable(s1_batch2).cuda()*params.wf
-            s1_batchf2= Variable(s1_batchf2).cuda()
-            su_batch= Variable(su_batch).cuda()*params.wf
-            su_batchf= Variable(su_batchf).cuda()
-            su_batchf2= Variable(su_batchf2).cuda()
-            
-            su_batch2= Variable(su_batch2).cuda()*params.wf
-            tgt_batch = Variable(torch.FloatTensor(target[stidx:stidx + params.batch_size])).cuda()
+          
+            tgt_batch = Variable(torch.LongTensor(target[: params.batch_size])).cuda()
+            tgtv_batch = Variable(torch.FloatTensor(targetv[: params.batch_size])).cuda()
         else:
-            s1_batch= Variable(s1_batch)*params.wf
-            s1_batchf= Variable(s1_batchf)
-            s1_batch2= Variable(s1_batch2)*params.wf
-            s1_batchf2= Variable(s1_batchf2)
+            s1_batch= Variable(s1_batch)*params.wf#.cuda()
+            s1_batchf= Variable(s1_batchf)#.cuda()
+            tgt_batch = Variable(torch.LongTensor(target[i:i + params.batch_size]))#.cuda()
+            tgtv_batch = Variable(torch.FloatTensor(targetv[i:i + params.batch_size]))#.cuda()
 
-            su_batch= Variable(su_batch)*params.wf
-            su_batchf= Variable(su_batchf)
-            su_batchf2= Variable(su_batchf2)
+        
+        # model forward
+        output = pdtb_net2((s1_batch, s1_len),s1_batchf) 
+        ou2 = F.softmax(output, dim=1)
             
-            su_batch2= Variable(su_batch2)*params.wf
-            tgt_batch = Variable(torch.FloatTensor(target[stidx:stidx + params.batch_size]))
-        k = s1_batch.size(1)  # actual batch size
-        output = pdtb_net((s1_batch, s1_len),s1_batchf)
-        output2 = pdtb_net((s1_batch2, s1_len2),s1_batchf2)
-        outputu = pdtb_net((su_batch, su_len),su_batchf)
-        outputu2 = pdtb_net2((su_batch2, su_len2),su_batchf2)
-        if params.loss==0:
-            pred = output.data.max(1)[1]
-        else:
-            pred=output.data[:,0]>0
+        for sis in range(output.size(0)):
+            kko.write(str(ou2.data[sis,1])+'\n')
+        
         
 
-        assert len(pred) == len(s1[stidx:stidx + params.batch_size])
-        if params.loss==0:
-            ou = F.softmax(outputu, dim=1)
-            
-            ou2 = F.softmax(outputu2, dim=1)
-            sou = F.softmax(output, dim=1)
-            
-            sou2 = F.softmax(output2, dim=1)
- 
-            a,_=torch.max(ou,1)
-            sa,_=torch.max(sou,1)
-
-            a=(a.detach()>params.th).view(-1,1).float()
-            sa=(sa.detach()>params.th).view(-1,1).float()
-            ou=ou*  torch.cat((a,a), 1)
-            ou2=ou2*  torch.cat((a,a), 1)
-            sou=sou*  torch.cat((sa,sa), 1)
-            sou2=sou2*  torch.cat((sa,sa), 1)
-        
-        else:
-            ou=outputu[:,0]
-            ou2=outputu2[:,0]
-            a=(ou.detach()>params.th).view(-1,1).float()
-            ou=ou*  a
-            ou2=ou2* a
-
-        ou2.require_grad=False
-        sou2.require_grad=False
-        loss2=( F.mse_loss(ou, ou2.detach(), size_average=False)+F.mse_loss(sou, sou2.detach(), size_average=False)) / params.n_classes/params.batch_size
-        # loss
-        if params.loss==0:
-            tgt_batch=torch.cat([1.0-tgt_batch.view(-1,1),tgt_batch.view(-1,1) ],dim=1)
-            oop=F.softmax(output, dim=1)
-            loss3=0
-            pppp=Variable(torch.FloatTensor([1/oop.size(0)]).cuda())
-            dmiu=torch.mean(oop[:,1])
-            dstd=torch.std(oop[:,1])
-            loss3=loss3+torch.abs(torch.mean(oop[:,1])-params.klmiu)+torch.abs(torch.std(oop[:,1])-params.klsig)
-            
-            kss=float(params.klsig)
-            
-            
-            loss1 = loss_fn(oop, tgt_batch.float())
-        else:
-            loss1 = loss_fn(output[:,0], (tgt_batch*2-1).float())
-        if epoch>=params.se:
-            loss=loss1+params.c*loss2+params.c2*loss3
-        else:
-            loss=loss1+params.c2*loss3
-        all_costs.append(loss.data[0])
-        words_count += (s1_batch.nelement()) / params.word_emb_dim
-
-        # backward
-        optimizer.zero_grad()
-        loss.backward()
-        
-        # gradient clipping (off by default)
-        shrink_factor = 1
-        total_norm = 0
-
-        for p in pdtb_net.parameters():
-            if p.requires_grad:
-                p.grad.data.div_(k)  # divide by the actual batch size
-                total_norm += p.grad.data.norm() ** 2
-        total_norm = np.sqrt(total_norm)
-
-        if total_norm > params.max_norm:
-            shrink_factor = params.max_norm / total_norm
-        current_lr = optimizer.param_groups[0]['lr'] # current lr (no external "lr", for adam)
-        optimizer.param_groups[0]['lr'] = current_lr * shrink_factor # just for update
-
-        # optimizer step
-        optimizer.step()
-        global global_step
-        global_step =global_step +1
-        gs=global_step
-        update_ema_variables(pdtb_net, pdtb_net2, params.d, gs)
-
-        optimizer.param_groups[0]['lr'] = current_lr
-        if len(all_costs) == 10:
-            logs.append('{0} ; loss {1} ; sentence/s {2} ; words/s {3} ; '.format(
-                            stidx, round(np.mean(all_costs), 2),
-                            int(len(all_costs) * params.batch_size / (time.time() - last_time)),
-                            int(words_count * 1.0 / (time.time() - last_time))))
-            print(logs[-1])
-            #print (loss3)
-
-            last_time = time.time()
-            words_count = 0
-            all_costs = []
-    
-    return f1
-
-
-
+    return 0
 
 
 
@@ -477,49 +390,8 @@ def trainepoch(epoch):
 Train model on Natural Language Inference task
 """
 epoch = 1
-for jpp in range (params.sss):
-    epochh = 1
-    gg=params.ne0
-    while not stop_training and epochh <= gg:
-        if params.bb==1:    
-            train_acc = trainepochb(epoch)
-            eval_acc = evaluate(epoch, 'valid')
-            eval_acc = evaluate(epoch, 'test')
-            q = evaluatee(epoch, 'unlab')
-        else:
-            train_acc = trainepoch(epoch)
-            eval_acc = evaluate(epoch, 'valid')
-            eval_acc = evaluate(epoch, 'test')
-            q = evaluatee(epoch, 'unlab')
-        epoch += 1
-        if epoch== params.me:
-            stop_training=1
-            fffa=open('opt'+params.test_data+str(params.c)+'ll'+str(params.c2)+'ll'+str(params.gnoise2)+'.txt','w')                                        
-            for ee in range(q.size(0)):
-                fffa.write(str(q.data[ee,1])+'\n')
-            fffa.close()
-        epochh+=1
-#q = evaluatea(epoch, 'test')
-    gg=params.n_epochs
-        
-    if params.rmu==1:
-        train['s1']=np.concatenate((train['s1'][:4342],unlab['s1'][:params.uss2]))
-        train['label']=np.concatenate((train['label'][:4342],q.data[:,0]))
-        unlab['s1']=unlab['s1'][params.uss2:]
-        xsl=np.concatenate((xsl[:4342],xsu[:params.uss2]))
-        xsu=xsu[params.uss2:]
-    else:
-        train['s1']=np.concatenate((train['s1'],unlab['s1'][:params.uss2]))
-        train['label']=np.concatenate((train['label'],q.data[:,0]))
-        unlab['s1']=unlab['s1'][params.uss2:]
-        xsl=np.concatenate((xsl,xsu[:params.uss2]))
-        xsu=xsu[params.uss2:]
-# Run best model on test set.
+pdtb_net2 = torch.load('/scratch/cluster/wjko/InferSent/savedir/3osmodel.pickle')
 
 print('\nTEST : Epoch {0}'.format(epoch))
-
+evaluate(0, 'test', True)
 # Save encoder instead of full model
-torch.save(pdtb_net,
-           os.path.join(params.outputdir, params.outputmodelname ))
-torch.save(pdtb_net2,
-           os.path.join(params.outputdir, '3os'+params.outputmodelname ))       
