@@ -483,14 +483,8 @@ for jpp in range (params.sss):
     while not stop_training and epochh <= gg:
         if params.bb==1:    
             train_acc = trainepochb(epoch)
-            eval_acc = evaluate(epoch, 'valid')
-            eval_acc = evaluate(epoch, 'test')
-            q = evaluatee(epoch, 'unlab')
         else:
             train_acc = trainepoch(epoch)
-            eval_acc = evaluate(epoch, 'valid')
-            eval_acc = evaluate(epoch, 'test')
-            q = evaluatee(epoch, 'unlab')
         epoch += 1
         if epoch== params.me:
             stop_training=1
@@ -499,7 +493,6 @@ for jpp in range (params.sss):
                 fffa.write(str(q.data[ee,1])+'\n')
             fffa.close()
         epochh+=1
-#q = evaluatea(epoch, 'test')
     gg=params.n_epochs
         
     if params.rmu==1:
