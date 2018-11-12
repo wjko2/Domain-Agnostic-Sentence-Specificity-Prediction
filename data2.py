@@ -105,7 +105,7 @@ def get_pdtb(data_path,dom,dat,tv):
     s1['train']['path'] = os.path.join(data_path, 'data.txt')
     
     if dat=='twitter':
-        s1['test']['path'] = '/scratch/cluster/wjko/opensubtitles-parser/psdo/02.txt'
+        s1['test']['path'] = os.path.join(data_path, 'twitters.txt')
 
         target['test']['path'] = os.path.join(data_path,'twitterl.txt')
         targetv['test']['path'] = 'dataset/pdtb/tlv.txt'
