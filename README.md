@@ -1,7 +1,7 @@
 Code for
 Wei-Jen Ko, Greg Durrett and Junyi Jessy Li, "Domain Agnostic Real-Valued Specificity Prediction", The AAAI Conference on Artificial Intelligence (AAAI), 2019
 
-The twitter, yelp, and movies data used in the paper is in dataset/pdtb
+The twitter, yelp, and movies data and annotations used in the paper is in dataset/pdtb
 
 This is a text specificity predictor for any domain. 
 To use it on a new domain, unlabeled sentences of the new domain is required.
