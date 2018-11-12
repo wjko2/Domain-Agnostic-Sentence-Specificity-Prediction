@@ -93,7 +93,7 @@ parser.add_argument("--eeps", type=float, default=0.1, help="seed")
 
 params, _ = parser.parse_known_args()
 if params.wed==300:
-    GLOVE_PATH = "dataset/GloVe/glove.840B.300d.txt"
+    GLOVE_PATH = "/scratch/cluster/wjko/InferSent/dataset/GloVe/glove.840B.300d.txt"
 
 # set gpu device
 torch.cuda.set_device(params.gpu_id)
@@ -366,7 +366,7 @@ def evaluate(epoch, eval_type='valid', final_eval=False):
 Train model on Natural Language Inference task
 """
 epoch = 1
-pdtb_net2 = torch.load('3os'+params.outputmodelname)
+pdtb_net2 = torch.load('savedir/3os'+params.outputmodelname)
 
 print('\nTEST : Epoch {0}'.format(epoch))
 evaluate(0, 'test', True)
