@@ -96,7 +96,7 @@ params, _ = parser.parse_known_args()
 if  params.test_data=='pdtb':
     params.esize=2784
 if params.wed==300:
-    GLOVE_PATH = "dataset/GloVe/glove.840B.300d.txt"
+    GLOVE_PATH = "/scratch/cluster/wjko/InferSent/dataset/GloVe/glove.840B.300d.txt"
 
 # set gpu device
 torch.cuda.set_device(params.gpu_id)
@@ -466,7 +466,7 @@ def trainepoch(epoch):
             words_count = 0
             all_costs = []
     
-    return f1
+    return 0
 
 
 
@@ -488,26 +488,12 @@ for jpp in range (params.sss):
         epoch += 1
         if epoch== params.me:
             stop_training=1
-            fffa=open('opt'+params.test_data+str(params.c)+'ll'+str(params.c2)+'ll'+str(params.gnoise2)+'.txt','w')                                        
-            for ee in range(q.size(0)):
-                fffa.write(str(q.data[ee,1])+'\n')
-            fffa.close()
+            #fffa=open('opt'+params.test_data+str(params.c)+'ll'+str(params.c2)+'ll'+str(params.gnoise2)+'.txt','w')                                        
+            #for ee in range(q.size(0)):
+            #    fffa.write(str(q.data[ee,1])+'\n')
+            #fffa.close()
         epochh+=1
     gg=params.n_epochs
-        
-    if params.rmu==1:
-        train['s1']=np.concatenate((train['s1'][:4342],unlab['s1'][:params.uss2]))
-        train['label']=np.concatenate((train['label'][:4342],q.data[:,0]))
-        unlab['s1']=unlab['s1'][params.uss2:]
-        xsl=np.concatenate((xsl[:4342],xsu[:params.uss2]))
-        xsu=xsu[params.uss2:]
-    else:
-        train['s1']=np.concatenate((train['s1'],unlab['s1'][:params.uss2]))
-        train['label']=np.concatenate((train['label'],q.data[:,0]))
-        unlab['s1']=unlab['s1'][params.uss2:]
-        xsl=np.concatenate((xsl,xsu[:params.uss2]))
-        xsu=xsu[params.uss2:]
-# Run best model on test set.
 
 print('\nTEST : Epoch {0}'.format(epoch))
 
