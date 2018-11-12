@@ -1,7 +1,19 @@
 Code for
 Wei-Jen Ko, Greg Durrett and Junyi Jessy Li, "Domain Agnostic Real-Valued Specificity Prediction", The AAAI Conference on Artificial Intelligence (AAAI), 2019
 
+The twitter, yelp, and movies data used in the paper is in dataset/pdtb
 
-python train.py  --d 0.999 --optimizer adam,lr=0.0001 --enc_lstm_dim 100 --fc_dim 100 --gnoise 0.1 --dprob 0.15 --iprob 0.15  --cprob 0.15 --sf 1 --sptrain 0 --esize 4342 --dom 1 --tv 200 --wf 1 --th 0.5  --nonlinear_fc 1 --dpout_fc 0.5 --gpu_id 0 --cth 0 --seed 508 --dpout_model 0.5 --lrshrink 1 --loss 0  --test_data movie --wed 300  --gnoise2 0.2 --norm 1 --se 4  --n_epochs 5 --uss 5000 --sss  50  --c 0 --uss2 5000 --rmu 0 --ne0 100  --md 0 --c2 0 --me 31
+This is a text specificity predictor for any domain. 
+To use it on a new domain, unlabeled sentences of the new domain is required.
+Please change the s1['unlab']['path'] in data2.py and the path of xsu in train.py and test.py to the unlabeled data file.
+Also change the s1['test']['path'] in data2.py and the path of xst in test.py to the test sentences file.
+The output file path in line 328 of test.py
 
-python test.py  --d 0.999 --optimizer adam,lr=0.0001 --enc_lstm_dim 100 --fc_dim 100 --gnoise 0.1 --dprob 0.15 --iprob 0.15  --cprob 0.15 --sf 1 --sptrain 0 --esize 4342 --dom 1 --tv 200 --wf 1 --th 0.5  --nonlinear_fc 1 --dpout_fc 0.5 --gpu_id 0 --cth 0 --seed 508 --dpout_model 0.5 --lrshrink 1 --loss 0  --test_data movie --wed 300  --gnoise2 0.2 --norm 1 --se 4  --n_epochs 5 --uss 5000 --sss  50  --c 0 --uss2 5000 --rmu 0 --ne0 100  --md 0 --c2 0 --me 31
+The first line in the testing data is ignored.
+
+
+Training command:
+python train.py  --gpu_id 0 --test_data twitter
+
+Testing command:
+python test.py  --gpu_id 0 --test_data twitter
