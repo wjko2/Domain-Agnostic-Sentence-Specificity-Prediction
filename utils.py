@@ -6,7 +6,7 @@ import os
 import gzip
 import numpy as np
 
-RT = "/scratch/cluster/wjko/speciteller/python/"
+RT = "../"
 
 MPQAFILE = RT+"resources/subjclueslen1-HLTEMNLP05.tff"
 MRCFILE = RT+"resources/mrc2.dct"
