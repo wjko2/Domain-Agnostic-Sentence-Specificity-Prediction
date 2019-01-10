@@ -96,7 +96,7 @@ params, _ = parser.parse_known_args()
 if  params.test_data=='pdtb':
     params.esize=2784
 if params.wed==300:
-    GLOVE_PATH = "/scratch/cluster/wjko/InferSent/dataset/GloVe/glove.840B.300d.txt"
+    GLOVE_PATH = "glove.840B.300d.txt"
 
 # set gpu device
 torch.cuda.set_device(params.gpu_id)
@@ -424,7 +424,7 @@ def trainepoch(epoch):
             loss=loss1+params.c*loss2+params.c2*loss3
         else:
             loss=loss1+params.c2*loss3
-        all_costs.append(loss.data[0])
+        all_costs.append(loss.item())
         words_count += (s1_batch.nelement()) / params.word_emb_dim
 
         # backward
@@ -439,7 +439,7 @@ def trainepoch(epoch):
             if p.requires_grad:
                 p.grad.data.div_(k)  # divide by the actual batch size
                 total_norm += p.grad.data.norm() ** 2
-        total_norm = np.sqrt(total_norm)
+        total_norm = np.sqrt(total_norm.cpu())
 
         if total_norm > params.max_norm:
             shrink_factor = params.max_norm / total_norm
