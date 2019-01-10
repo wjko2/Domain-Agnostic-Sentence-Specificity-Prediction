@@ -2,8 +2,13 @@ Code for
 Wei-Jen Ko, Greg Durrett and Junyi Jessy Li, "Domain Agnostic Real-Valued Specificity Prediction", The AAAI Conference on Artificial Intelligence (AAAI), 2019
 
 The twitter, yelp, and movies data and annotations used in the paper is in dataset/pdtb
-
 This is a text specificity predictor for any domain. 
+
+
+The glove vector file (840B.300d) is required. Download it and set the glove path in train.py and test.py
+
+
+
 To use it on a new domain, unlabeled sentences of the new domain is required.
 
 Please change the s1['unlab']['path'] in data2.py and the path of xsu in train.py and test.py to the unlabeled data file.
