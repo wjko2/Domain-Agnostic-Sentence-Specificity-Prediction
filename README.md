@@ -1,5 +1,17 @@
+# Domain Agnostic Real-Valued Specificity Prediction
 Code for
 Wei-Jen Ko, Greg Durrett and Junyi Jessy Li, "Domain Agnostic Real-Valued Specificity Prediction", The AAAI Conference on Artificial Intelligence (AAAI), 2019
+
+**Citation:**
+```
+@InProceedings{ko2019domain,
+  author    = {Ko, Wei-Jen and Durrett, Greg and Li, Junyi Jessy},
+  title     = {Domain Agnostic Real-Valued Specificity Prediction,
+  booktitle = {AAAI},
+  year      = {2019},
+}
+```
+
 
 The twitter, yelp, and movies data and annotations used in the paper is in dataset/pdtb
 This is a text specificity predictor for any domain. 
@@ -22,3 +34,5 @@ python train.py  --gpu_id 0 --test_data twitter
 
 Testing command:
 python test.py  --gpu_id 0 --test_data twitter
+
+
