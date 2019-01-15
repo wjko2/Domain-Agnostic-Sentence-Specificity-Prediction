@@ -8,7 +8,7 @@ This is a text specificity predictor for any domain.
 ```
 @InProceedings{ko2019domain,
   author    = {Ko, Wei-Jen and Durrett, Greg and Li, Junyi Jessy},
-  title     = {Domain Agnostic Real-Valued Specificity Prediction,
+  title     = {Domain Agnostic Real-Valued Specificity Prediction},
   booktitle = {AAAI},
   year      = {2019},
 }
