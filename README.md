@@ -41,9 +41,9 @@ python test.py  --gpu_id 0 --test_data twitter
 ## Using it on a new domain
 To use it on a new domain, unlabeled sentences of the new domain is required.
 
-Change the s1['unlab']['path'] in data2.py and the path of xsu in train.py and test.py to the unlabeled data file.
+When training,Change the s1['unlab']['path'] in data2.py and the path of xsu in train.py and test.py to the unlabeled data file.
 
-Also change the s1['test']['path'] in data2.py and the path of xst in test.py to the test sentences file.
+When testing, Change the s1['test']['path'] in data2.py and the path of xst in test.py to the test sentences file.
 
 The first line in the testing data is ignored.
 
