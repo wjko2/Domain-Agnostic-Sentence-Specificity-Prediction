@@ -26,7 +26,7 @@ The glove vector file (840B.300d) is required. Download it and set the glove pat
 wget https://nlp.stanford.edu/data/glove.840B.300d.zip
 unzip glove.840B.300d.zip
 ```
-The twitter, yelp, and movies data and annotations used in the paper is in dataset/pdtb
+The twitter, yelp, and movies data and annotations used in the paper is in dataset/data
 
 
 ## Running 
