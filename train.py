@@ -24,7 +24,7 @@ global_step=0
 
 parser = argparse.ArgumentParser(description='NLI training')
 # paths
-parser.add_argument("--nlipath", type=str, default='dataset/pdtb/', help="NLI data path (SNLI or MultiNLI)")
+parser.add_argument("--nlipath", type=str, default='dataset/data/', help="NLI data path (SNLI or MultiNLI)")
 parser.add_argument("--outputdir", type=str, default='savedir/', help="Output directory")
 parser.add_argument("--outputmodelname", type=str, default='model.pickle')
 parser.add_argument("--c", type=float, default='1000')
@@ -164,16 +164,16 @@ _,xsl = getFeatures(os.path.join(params.nlipath,'data.txt'))
 
 if params.test_data=="twitter":
     _,xst= getFeatures(os.path.join(params.nlipath,'twitters.txt'))
-    _,xsu = getFeatures('dataset/pdtb/twitteru.txt')
+    _,xsu = getFeatures('dataset/data/twitteru.txt')
 
 
 elif params.test_data=="yelp":
     _,xst= getFeatures(os.path.join(params.nlipath,'ys.txt'))
-    _,xsu = getFeatures('dataset/pdtb/yelpu.txt')
+    _,xsu = getFeatures('dataset/data/yelpu.txt')
 
 elif params.test_data=="movie":
     _,xst= getFeatures(os.path.join(params.nlipath,'ms.txt'))
-    _,xsu = getFeatures('dataset/pdtb/moviesu.txt')
+    _,xsu = getFeatures('dataset/data/moviesu.txt')
 
 
 _,xslu= getFeatures(os.path.join(params.nlipath, 'aaai15unlabeled/all.60000.sents'))
