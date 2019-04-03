@@ -408,11 +408,12 @@ def trainepoch(epoch):
         if params.loss==0:
             tgt_batch=torch.cat([1.0-tgt_batch.view(-1,1),tgt_batch.view(-1,1) ],dim=1)
             oop=F.softmax(output, dim=1)
+            oop2=F.softmax(outputu, dim=1)
             loss3=0
             pppp=Variable(torch.FloatTensor([1/oop.size(0)]).cuda())
-            dmiu=torch.mean(oop[:,1])
-            dstd=torch.std(oop[:,1])
-            loss3=loss3+torch.abs(torch.mean(oop[:,1])-params.klmiu)+torch.abs(torch.std(oop[:,1])-params.klsig)
+            dmiu=torch.mean(oop2[:,1])
+            dstd=torch.std(oop2[:,1])
+            loss3=loss3+torch.abs(torch.mean(oop2[:,1])-params.klmiu)+torch.abs(torch.std(oop2[:,1])-params.klsig)
             
             kss=float(params.klsig)
             
