@@ -43,7 +43,7 @@ To use it on a new domain, unlabeled sentences of the new domain is required.
 
 When training,change the s1['unlab']['path'] in data2.py and the path of xsu in train.py and test.py to the unlabeled data file.
 
-When testing, change the s1['test']['path'] in data2.py and the path of xst in test.py to the test sentences file.
+When testing, change the s1['test']['path'] in data2.py and the path of xst in test.py to the test sentences file.(And make sure s1['unlab']['path'] in data2.py and the path of xsu in test.py is the same file)
 
 The first line in the testing data is ignored.
 
