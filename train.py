@@ -168,12 +168,12 @@ if params.test_data=="twitter":
 
 
 elif params.test_data=="yelp":
-    _,xst= getFeatures(os.path.join(params.nlipath,'ys.txt'))
+    _,xst= getFeatures(os.path.join(params.nlipath,'yelps.txt'))
     _,xsu = getFeatures('dataset/data/yelpu.txt')
 
 elif params.test_data=="movie":
-    _,xst= getFeatures(os.path.join(params.nlipath,'ms.txt'))
-    _,xsu = getFeatures('dataset/data/moviesu.txt')
+    _,xst= getFeatures(os.path.join(params.nlipath,'movies.txt'))
+    _,xsu = getFeatures('dataset/data/movieu.txt')
 
 
 _,xslu= getFeatures(os.path.join(params.nlipath, 'aaai15unlabeled/all.60000.sents'))
