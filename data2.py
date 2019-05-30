@@ -102,19 +102,19 @@ def get_pdtb(data_path,dom,dat,tv):
         s1['test']['path'] = os.path.join(data_path, 'twitters.txt')
 
         target['test']['path'] = os.path.join(data_path,'twitterl.txt')
-        targetv['test']['path'] = 'dataset/data/tlv.txt'
+        targetv['test']['path'] = 'dataset/data/twitterv.txt'
         s1['unlab']['path'] ='dataset/data/twitteru.txt'
     elif dat=='yelp':
-        s1['test']['path'] = os.path.join(data_path, 'ys.txt')
-        target['test']['path'] = os.path.join(data_path,'yl.txt')
-        targetv['test']['path'] = 'dataset/data/ylv.txt'
+        s1['test']['path'] = os.path.join(data_path, 'yelps.txt')
+        target['test']['path'] = os.path.join(data_path,'yelpl.txt')
+        targetv['test']['path'] = 'dataset/data/yelpv.txt'
         s1['unlab']['path'] = 'dataset/data/yelpu.txt'
     
     elif dat=='movie':
-        s1['test']['path'] = os.path.join(data_path, 'ms.txt')
-        target['test']['path'] = os.path.join(data_path,'ml.txt')
-        targetv['test']['path'] = 'dataset/data/mlv.txt'
-        s1['unlab']['path'] = 'dataset/data/moviesu.txt'
+        s1['test']['path'] = os.path.join(data_path, 'movies.txt')
+        target['test']['path'] = os.path.join(data_path,'moviel.txt')
+        targetv['test']['path'] = 'dataset/data/moviev.txt'
+        s1['unlab']['path'] = 'dataset/data/movieu.txt'
     
     s1['trainu']['path'] = os.path.join(data_path, 'aaai15unlabeled/all.60000.sents')
 
