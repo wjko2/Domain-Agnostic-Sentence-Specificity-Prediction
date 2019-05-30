@@ -29,9 +29,13 @@ unzip glove.840B.300d.zip
 The twitter, yelp, and movies data and annotations used in the paper is in dataset/data
 
 Data format:
+
 twitters.txt is the sentences
+
 twitterv.txt are average specificity labeled by turkers for each sentence, permutated in the same order. 
+
 twitteru.txt is the unlabeled target domain data used in the paper
+
 twitterl.txt is the binary specificity label, which is not used.
 
 For other domains, ubstitute the domain name in the file names.
