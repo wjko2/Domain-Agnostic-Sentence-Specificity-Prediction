@@ -56,6 +56,8 @@ When training,change the s1['unlab']['path'] in data2.py and the path of xsu in 
 
 When testing, change the s1['test']['path'] in data2.py and the path of xst in test.py to the test sentences file.(And make sure s1['unlab']['path'] in data2.py and the path of xsu in test.py is the same file)
 
+The unlabeled data can be the same as test data.
+
 <b>The first line in the testing data is ignored.</b>
 
 
