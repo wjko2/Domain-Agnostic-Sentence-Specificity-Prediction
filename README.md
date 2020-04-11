@@ -60,5 +60,5 @@ The unlabeled data can be the same as test data.
 
 <b>The first line in the testing data is ignored.</b>
 
-
-
+## For users without GPU/CUDA
+Please replace the train.py, test.py, model.py with the files in no_cuda.zip
