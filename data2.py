@@ -99,22 +99,22 @@ def get_pdtb(data_path,dom,dat,tv):
     s1['train']['path'] = os.path.join(data_path, 'data.txt')
     
     if dat=='twitter':
-        s1['test']['path'] = os.path.join(data_path, 'twitters.txt')
+        s1['test']['path'] = "all_sent.txt"
 
         target['test']['path'] = os.path.join(data_path,'twitterl.txt')
         targetv['test']['path'] = 'dataset/data/twitterv.txt'
-        s1['unlab']['path'] ='dataset/data/twitteru.txt'
+        s1['unlab']['path'] ="all_sent.txt"
     elif dat=='yelp':
-        s1['test']['path'] = os.path.join(data_path, 'yelps.txt')
+        s1['test']['path'] = "all_sent.txt"
         target['test']['path'] = os.path.join(data_path,'yelpl.txt')
         targetv['test']['path'] = 'dataset/data/yelpv.txt'
-        s1['unlab']['path'] = 'dataset/data/yelpu.txt'
+        s1['unlab']['path'] = "all_sent.txt"
     
     elif dat=='movie':
-        s1['test']['path'] = os.path.join(data_path, 'movies.txt')
+        s1['test']['path'] = "all_sent.txt"
         target['test']['path'] = os.path.join(data_path,'moviel.txt')
         targetv['test']['path'] = 'dataset/data/moviev.txt'
-        s1['unlab']['path'] = 'dataset/data/movieu.txt'
+        s1['unlab']['path'] = "all_sent.txt"
     
     s1['trainu']['path'] = os.path.join(data_path, 'aaai15unlabeled/all.60000.sents')
 
