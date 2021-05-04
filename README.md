@@ -16,7 +16,7 @@ This is a text specificity predictor for any domain.
 
 
 ## Dependencies
--Pytorch (Tested on 1.0.0)
+-Pytorch (Tested on 1.0.0, it is known to produce incorrect results on 1.7.1)
 
 -Numpy
 
